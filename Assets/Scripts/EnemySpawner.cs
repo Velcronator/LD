@@ -9,9 +9,11 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float timeBetweenWaves = 3f;
     private WaveConfigSO currentWave;
 
+    private bool isLooping = true;
+
     void Start()
     {
-        StartCoroutine(SpawnEnemies());
+        StartCoroutine(SpawnEnemyWaves());
     }
 
     public WaveConfigSO GetCurrentWave()
@@ -19,22 +21,20 @@ public class EnemySpawner : MonoBehaviour
         return currentWave;
     }
 
-    private IEnumerator SpawnEnemies()
+    private IEnumerator SpawnEnemyWaves()
     {
-        foreach (WaveConfigSO waveConfig in waveConfigs)
+        System.Random random = new System.Random();
+        int waveIndex = random.Next(0, waveConfigs.Count);
+        do
         {
-            currentWave = waveConfig;
-            yield return StartCoroutine(SpawnWave());
+            currentWave = waveConfigs[waveIndex];
+            for (int i = 0; i < currentWave.GetEnemyCount(); i++)
+            {
+                Instantiate(currentWave.GetEnemyPrefab(i), currentWave.GetStartingWaypoint().position, Quaternion.identity, transform);
+                yield return new WaitForSeconds(currentWave.GetRandomSpawnTime());
+            }
             yield return new WaitForSeconds(timeBetweenWaves);
-        }
-    }
-
-    private IEnumerator SpawnWave()
-    {
-        for (int i = 0; i < currentWave.GetEnemyCount(); i++)
-        {
-            Instantiate(currentWave.GetEnemyPrefab(i), currentWave.GetStartingWaypoint().position, Quaternion.identity, transform);
-            yield return new WaitForSeconds(currentWave.GetRandomSpawnTime());
-        }
+            waveIndex = random.Next(0, waveConfigs.Count);
+        } while (isLooping);
     }
 }

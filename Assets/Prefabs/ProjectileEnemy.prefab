@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3930142066560558191}
   - component: {fileID: 6276384047811725250}
   m_Layer: 7
-  m_Name: laserBlue07
+  m_Name: laserRed07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

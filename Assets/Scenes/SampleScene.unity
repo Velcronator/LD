@@ -515,11 +515,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 659785001355440534, guid: 22af189502c08d04599f4e18d2fe7dcf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.2
       objectReference: {fileID: 0}
     - target: {fileID: 659785001355440534, guid: 22af189502c08d04599f4e18d2fe7dcf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -6.7
       objectReference: {fileID: 0}
     - target: {fileID: 659785001355440534, guid: 22af189502c08d04599f4e18d2fe7dcf, type: 3}
       propertyPath: m_LocalPosition.z
@@ -553,6 +553,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1656367446926450437, guid: 22af189502c08d04599f4e18d2fe7dcf, type: 3}
+      propertyPath: isFiring
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1656367446926450437, guid: 22af189502c08d04599f4e18d2fe7dcf, type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 7144596988887838635, guid: 56f0bd25920ef414f925025edfa6ac9c, type: 3}
     - target: {fileID: 5719279193060096260, guid: 22af189502c08d04599f4e18d2fe7dcf, type: 3}
       propertyPath: m_Name
       value: Player

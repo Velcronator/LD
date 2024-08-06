@@ -1,9 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
+    public event EventHandler<HealthEventArgs> OnTakeDamage;
+    public event EventHandler<HealthEventArgs> OnDeath;
+
+    [SerializeField] bool isPlayer = false;
     [SerializeField] int health = 50;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -11,17 +14,20 @@ public class Health : MonoBehaviour
         DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
         if (damageDealer != null)
         {
-            TakeDamage(damageDealer);
+            TakeDamage(damageDealer, collision.transform.position);
             damageDealer.Hit();
         }
     }
 
-    private void TakeDamage(DamageDealer damageDealer)
+    private void TakeDamage(DamageDealer damageDealer, Vector2 damagePosition)
     {
+        OnTakeDamage?.Invoke(this, new HealthEventArgs(damagePosition, isPlayer));
+
         health -= damageDealer.GetDamage();
         if (health <= 0)
         {
             Destroy(gameObject);
+            OnDeath?.Invoke(this, new HealthEventArgs(damagePosition, isPlayer));
         }
     }
 }

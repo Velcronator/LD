@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7320404368486809694}
   - component: {fileID: 868092031087802734}
   - component: {fileID: -7256556015266641156}
+  - component: {fileID: 5383934457635216129}
   m_Layer: 7
   m_Name: Enemy 0
   m_TagString: Untagged
@@ -155,9 +156,22 @@ MonoBehaviour:
   projectileLifetime: 5
   minFiringRate: 0.8
   maxFiringRate: 2
-  firingRate: 0.3
-  isEnemy: 1
+  baseFiringRate: 0.2
   isFiring: 0
+--- !u!114 &5383934457635216129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3389114136545032312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7e5d301d44c9f469e41ae1ad104cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particlePrefabs:
+  - {fileID: 234249168542017684, guid: b77130e86f6cb6d48992271569a064d6, type: 3}
 --- !u!1 &5182505948468642702
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ public class ExplosionFX : MonoBehaviour
 
     private void OnTakeDamage(object sender, HealthEventArgs e)
     {
-        PlayExplosion(UnityEngine.Random.Range(0, particlePrefabs.Count), e.Position);
+        PlayExplosion(UnityEngine.Random.Range(0, particlePrefabs.Count), e.DamagePosition);
     }
 
     private void PlayExplosion(int index, Vector2 position)

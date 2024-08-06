@@ -6,10 +6,10 @@ public class Health : MonoBehaviour
     public event EventHandler<HealthEventArgs> OnTakeDamage;
     public event EventHandler<HealthEventArgs> OnDeath;
 
-    [SerializeField] bool isPlayer = false;
-    [SerializeField] int health = 50;
+    [SerializeField] private bool isPlayer = false;
+    [SerializeField] private int health = 50;
 
-    AudioPlayer audioPlayer;
+    private AudioPlayer audioPlayer;
 
     private void Awake()
     {
@@ -28,14 +28,30 @@ public class Health : MonoBehaviour
 
     private void TakeDamage(DamageDealer damageDealer, Vector2 damagePosition)
     {
-        OnTakeDamage?.Invoke(this, new HealthEventArgs(damagePosition, isPlayer));
+        int damage = damageDealer.GetDamage();
+        if (OnTakeDamage != null)
+        {
+            OnTakeDamage.Invoke(this, new HealthEventArgs(damagePosition, damage, isPlayer));
+        }
+        else
+        {
+            Debug.LogWarning("No subscribers for OnTakeDamage event.");
+        }
+
         audioPlayer.PlayExplosionClip(isPlayer);
 
-        health -= damageDealer.GetDamage();
+        health -= damage;
         if (health <= 0)
         {
+            if (OnDeath != null)
+            {
+                OnDeath.Invoke(this, new HealthEventArgs(damagePosition, damage, isPlayer));
+            }
+            else
+            {
+                Debug.LogWarning("No subscribers for OnDeath event.");
+            }
             Destroy(gameObject);
-            OnDeath?.Invoke(this, new HealthEventArgs(damagePosition, isPlayer));
         }
     }
 }

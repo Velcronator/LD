@@ -16,6 +16,13 @@ public class Shooter : MonoBehaviour
     public bool isFiring = false;
     private Coroutine firingCoroutine;
 
+    AudioPlayer audioPlayer;
+
+    private void Awake()
+    {
+        audioPlayer = FindObjectOfType<AudioPlayer>();
+    }
+
     private void Start()
     {
         if (gameObject.layer == LayerMask.NameToLayer("Enemy"))
@@ -46,6 +53,7 @@ public class Shooter : MonoBehaviour
         }
         while (isFiring)
         {
+            audioPlayer.PlayShootingClip(isEnemy);
             GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
             projectile.GetComponent<Rigidbody2D>().velocity = new Vector2(0, moveSpeed);
             Destroy(projectile, projectileLifetime);

@@ -9,6 +9,13 @@ public class Health : MonoBehaviour
     [SerializeField] bool isPlayer = false;
     [SerializeField] int health = 50;
 
+    AudioPlayer audioPlayer;
+
+    private void Awake()
+    {
+        audioPlayer = FindObjectOfType<AudioPlayer>();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
@@ -22,6 +29,7 @@ public class Health : MonoBehaviour
     private void TakeDamage(DamageDealer damageDealer, Vector2 damagePosition)
     {
         OnTakeDamage?.Invoke(this, new HealthEventArgs(damagePosition, isPlayer));
+        audioPlayer.PlayExplosionClip(isPlayer);
 
         health -= damageDealer.GetDamage();
         if (health <= 0)

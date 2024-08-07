@@ -1,17 +1,13 @@
-using System.Collections.Generic;
-using System;
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] List<WaveConfigSO> waveConfigs;
-    [SerializeField] float timeBetweenWaves = 3f;
-    private WaveConfigSO currentWave;
-
-    private bool isLooping = true;
-
-    public event Action<GameObject> OnEnemySpawned;
+    [SerializeField] float timeBetweenWaves = 0f;
+    [SerializeField] bool isLooping;
+    WaveConfigSO currentWave;
 
     void Start()
     {
@@ -23,22 +19,24 @@ public class EnemySpawner : MonoBehaviour
         return currentWave;
     }
 
-    private IEnumerator SpawnEnemyWaves()
+    IEnumerator SpawnEnemyWaves()
     {
-        System.Random random = new System.Random();
-        int waveIndex = random.Next(0, waveConfigs.Count);
         do
         {
-            currentWave = waveConfigs[waveIndex];
-            for (int i = 0; i < currentWave.GetEnemyCount(); i++)
+            foreach (WaveConfigSO wave in waveConfigs)
             {
-                GameObject enemy = Instantiate(currentWave.GetEnemyPrefab(i), currentWave.GetStartingWaypoint().position, Quaternion.identity, transform);
-                OnEnemySpawned?.Invoke(enemy); // Notify subscribers
-                yield return new WaitForSeconds(currentWave.GetRandomSpawnTime());
+                currentWave = wave;
+                for (int i = 0; i < currentWave.GetEnemyCount(); i++)
+                {
+                    Instantiate(currentWave.GetEnemyPrefab(i),
+                                currentWave.GetStartingWaypoint().position,
+                                Quaternion.Euler(0, 0, 180),
+                                transform);
+                    yield return new WaitForSeconds(currentWave.GetRandomSpawnTime());
+                }
+                yield return new WaitForSeconds(timeBetweenWaves);
             }
-            yield return new WaitForSeconds(timeBetweenWaves);
-            waveIndex = random.Next(0, waveConfigs.Count);
-        } while (isLooping);
+        }
+        while (isLooping);
     }
-
 }

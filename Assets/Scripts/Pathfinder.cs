@@ -1,20 +1,16 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class Pathfinder : MonoBehaviour
 {
     EnemySpawner enemySpawner;
-    private WaveConfigSO waveConfig;
-    private List<Transform> waypoints;
-    private int waypointIndex = 0;
+    WaveConfigSO waveConfig;
+    List<Transform> waypoints;
+    int waypointIndex = 0;
 
-    private void Awake()
+    void Awake()
     {
         enemySpawner = FindObjectOfType<EnemySpawner>();
-        
     }
 
     void Start()
@@ -29,15 +25,14 @@ public class Pathfinder : MonoBehaviour
         FollowPath();
     }
 
-    private void FollowPath()
+    void FollowPath()
     {
-        if(waypointIndex <= waypoints.Count - 1)
+        if (waypointIndex < waypoints.Count)
         {
             Vector3 targetPosition = waypoints[waypointIndex].position;
-            float movementThisFrame = waveConfig.GetMoveSpeed() * Time.deltaTime;
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, movementThisFrame);
-
-            if(transform.position == targetPosition)
+            float delta = waveConfig.GetMoveSpeed() * Time.deltaTime;
+            transform.position = Vector2.MoveTowards(transform.position, targetPosition, delta);
+            if (transform.position == targetPosition)
             {
                 waypointIndex++;
             }

@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 7320404368486809694}
   - component: {fileID: 868092031087802734}
   - component: {fileID: -7256556015266641156}
-  - component: {fileID: 5383934457635216129}
   m_Layer: 7
   m_Name: Enemy 0
   m_TagString: Untagged
@@ -138,7 +137,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 960414d632462984d8018b697ea61d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayer: 0
   health: 20
+  score: 50
+  hitEffect: {fileID: 4281157986445365616, guid: b77130e86f6cb6d48992271569a064d6, type: 3}
+  applyCameraShake: 0
 --- !u!114 &-7256556015266641156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,26 +155,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 7144596988887838635, guid: 917c82db0c3113643b528490d2e73bbf, type: 3}
-  moveSpeed: 10
+  projectileSpeed: 12
   projectileLifetime: 5
-  minFiringRate: 0.8
-  maxFiringRate: 2
-  baseFiringRate: 0.2
+  baseFiringRate: 1
+  useAI: 1
+  firingRateVariance: 0.25
+  minimumFiringRate: 0.1
   isFiring: 0
---- !u!114 &5383934457635216129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3389114136545032312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7e5d301d44c9f469e41ae1ad104cc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  particlePrefabs:
-  - {fileID: 234249168542017684, guid: b77130e86f6cb6d48992271569a064d6, type: 3}
 --- !u!1 &5182505948468642702
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,7 +235,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 57a4cf63f662cc045b640abb2949c694, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 80b53d75870747e44bebd11861e24c52, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

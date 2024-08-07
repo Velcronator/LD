@@ -1,114 +1,45 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ScoreKeeper : MonoBehaviour
 {
-    [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private GameObject playerPrefab;
+    int score;
 
-    private int currentScore = 0;
+    static ScoreKeeper instance;
 
-    private Health playerHealth;
-    private Health enemyHealth;
-
-    private void Start()
+    void Awake()
     {
-        // Ensure prefabs are assigned
-        if (enemyPrefab == null || playerPrefab == null)
-        {
-            Debug.LogError("Prefabs are not assigned!");
-            return;
-        }
+        ManageSingleton();
+    }
 
-        playerHealth = playerPrefab.GetComponent<Health>();
-
-        // Check if Health components are attached
-        if (playerHealth != null)
+    void ManageSingleton()
+    {
+        if (instance != null)
         {
-            playerHealth.OnTakeDamage += PlayerHit;
-            playerHealth.OnDeath += PlayerDeath;
+            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
         else
         {
-            Debug.LogError("Player prefab does not have a Health component.");
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-
-        // Subscribe to enemies dynamically
-        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
-        if (spawner != null)
-        {
-            spawner.OnEnemySpawned += OnEnemySpawned;
-        }
-    }
-
-    private void OnDestroy()
-    {
-        // Unsubscribe from health events to prevent memory leaks
-        if (playerHealth != null)
-        {
-            playerHealth.OnTakeDamage -= PlayerDeath;
-            playerHealth.OnDeath -= PlayerDeath;
-        }
-
-        if (enemyHealth != null)
-        {
-            enemyHealth.OnTakeDamage -= EnemyDamageModifyScore;
-            enemyHealth.OnDeath -= EnemyDeathModifyScore;
-        }
-
-        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
-        if (spawner != null)
-        {
-            spawner.OnEnemySpawned -= OnEnemySpawned;
-        }
-    }
-
-    private void OnEnemySpawned(GameObject enemy)
-    {
-        Health enemyHealth = enemy.GetComponent<Health>();
-        if (enemyHealth != null)
-        {
-            enemyHealth.OnTakeDamage += EnemyDamageModifyScore;
-            enemyHealth.OnDeath += EnemyDeathModifyScore;
-        }
-        else
-        {
-            Debug.LogError("Spawned enemy does not have a Health component.");
-        }
-    }
-
-
-
-    private void EnemyDeathModifyScore(object sender, HealthEventArgs e)
-    {
-        currentScore += e.ScoreValue;
-        Debug.Log("EnemyDeath Score: " + currentScore);
-    }
-
-    private void EnemyDamageModifyScore(object sender, HealthEventArgs e)
-    {
-        currentScore += e.ScoreValue;
-        Debug.Log("EnemyDamage Score: " + currentScore);
-    }
-
-    private void PlayerHit(object sender, HealthEventArgs e)
-    {
-        currentScore = Mathf.Clamp(currentScore, 0, int.MaxValue);
-    }
-
-    private void PlayerDeath(object sender, HealthEventArgs e)
-    {
-        currentScore = Mathf.Clamp(currentScore, 0, int.MaxValue);
-        Debug.Log("Player died. Score: " + currentScore);
     }
 
     public int GetScore()
     {
-        return currentScore;
+        return score;
+    }
+
+    public void ModifyScore(int value)
+    {
+        score += value;
+        Mathf.Clamp(score, 0, int.MaxValue);
     }
 
     public void ResetScore()
     {
-        currentScore = 0;
+        score = 0;
     }
 }

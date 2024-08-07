@@ -6,9 +6,26 @@ public class MusicManager : MonoBehaviour
     public List<AudioClip> tunes;
     private AudioSource audioSource;
 
+    static MusicManager instance;
+
     void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        ManageSingleton();
+    }
+
+    private void ManageSingleton()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
     }
 
     void Start()

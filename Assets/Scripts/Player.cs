@@ -1,28 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float paddingLeft = 0.5f;
-    [SerializeField] private float paddingRight = 0.5f;
-    [SerializeField] private float paddingTop = 0.5f;
-    [SerializeField] private float paddingBottom = 0.5f;
+    [SerializeField] float moveSpeed = 5f;
+    Vector2 rawInput;
+
+    [SerializeField] float paddingLeft;
+    [SerializeField] float paddingRight;
+    [SerializeField] float paddingTop;
+    [SerializeField] float paddingBottom;
+
+    Vector2 minBounds;
+    Vector2 maxBounds;
 
     Shooter shooter;
 
-    
-    private Vector2 minBounds;
-    private Vector2 maxBounds;
-
-    private Vector2 rawInput;
-
-    private void Awake()
+    void Awake()
     {
         shooter = GetComponent<Shooter>();
     }
 
-    private void Start()
+    void Start()
     {
         InitBounds();
     }
@@ -39,7 +40,7 @@ public class Player : MonoBehaviour
         maxBounds = mainCamera.ViewportToWorldPoint(new Vector2(1, 1));
     }
 
-    private void Move()
+    void Move()
     {
         Vector2 delta = rawInput * moveSpeed * Time.deltaTime;
         Vector2 newPos = new Vector2();
@@ -48,14 +49,14 @@ public class Player : MonoBehaviour
         transform.position = newPos;
     }
 
-    public void OnMove(InputValue value)
+    void OnMove(InputValue value)
     {
         rawInput = value.Get<Vector2>();
     }
 
-    public void OnFire(InputValue value)
+    void OnFire(InputValue value)
     {
-        if(shooter != null)
+        if (shooter != null)
         {
             shooter.isFiring = value.isPressed;
         }

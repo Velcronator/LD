@@ -1,66 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class AudioPlayer : MonoBehaviour
 {
     [Header("Shooting")]
-    [SerializeField]private float enemyDistanceVolumeDivider = 2f;
-    [SerializeField] AudioClip[] shootingClips;
-    [SerializeField][Range(0.0f, 1.0f)] float shootingVolume = 1.0f;
+    [SerializeField] AudioClip shootingClip;
+    [SerializeField][Range(0f, 1f)] float shootingVolume = 1f;
 
-    [Header("Explosions")]
-    [SerializeField] AudioClip[] explosionsClips;
-    [SerializeField][Range(0.0f, 1.0f)] float explosionsVolume = 1.0f;
+    [Header("Damage")]
+    [SerializeField] AudioClip damageClip;
+    [SerializeField][Range(0f, 1f)] float damageVolume = 1f;
 
-    float tempVol;
+    static AudioPlayer instance;
 
-    public void PlayShootingClip(bool isEnemy)
+    void Awake()
     {
-        if (shootingClips.Length == 0)
+        ManageSingleton();
+    }
+
+    void ManageSingleton()
+    {
+        if (instance != null)
         {
-            return;
+            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
         else
         {
-            int index = Random.Range(0, shootingClips.Length);
-            PlayClip(shootingClips[index], SetVolume(shootingVolume, isEnemy));
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
 
-    public void PlayExplosionClip(bool isPlayer)
+    public void PlayShootingClip()
     {
-        if (explosionsClips.Length == 0)
-        {
-            return;
-        }
-        else
-        {
-            int index = Random.Range(0, explosionsClips.Length);
-            PlayClip(explosionsClips[index], SetVolume(explosionsVolume, !isPlayer));
-        }
+        PlayClip(shootingClip, shootingVolume);
     }
 
-    private void PlayClip(AudioClip clip, float volume)
+    public void PlayDamageClip()
     {
-        if(clip != null) 
-        {
-            AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position, volume);
-        }
+        PlayClip(damageClip, damageVolume);
     }
 
-    private float SetVolume(float volume, bool isEnemy)
+    void PlayClip(AudioClip clip, float volume)
     {
-        tempVol = volume;
-        if(isEnemy)
+        if (clip != null)
         {
-            tempVol = volume / enemyDistanceVolumeDivider;
+            Vector3 cameraPos = Camera.main.transform.position;
+            AudioSource.PlayClipAtPoint(clip, cameraPos, volume);
         }
-        else
-        {
-            tempVol = volume;
-        }
-        return tempVol;
     }
 }

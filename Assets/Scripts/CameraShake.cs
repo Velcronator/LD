@@ -4,41 +4,28 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    [SerializeField] private float shakeDuration = 1f;
-    [SerializeField] private float shakeMagnitude = 0.5f;
-    private Vector3 initialPosition;
-    Health health;
-    Player player;
+    [SerializeField] float shakeDuration = 1f;
+    [SerializeField] float shakeMagnitude = 0.5f;
+
+    Vector3 initialPosition;
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
-        health = player.GetComponent<Health>();
         initialPosition = transform.position;
-        health.OnTakeDamage += OnTakeDamage;
     }
 
-    private void OnTakeDamage(object sender, HealthEventArgs e)
+    public void Play()
     {
-        if(e.IsPlayer)
-        {
-            StartCoroutine(ShakeCamera()); 
-        }
+        StartCoroutine(Shake());
     }
 
-    private IEnumerator ShakeCamera()
+    IEnumerator Shake()
     {
-        float elapsed = 0.0f;
-
-        while (elapsed < shakeDuration)
+        float elapsedTime = 0;
+        while (elapsedTime < shakeDuration)
         {
-            float x = Random.Range(-1f, 1f) * shakeMagnitude;
-            float y = Random.Range(-1f, 1f) * shakeMagnitude;
-
-            transform.position = new Vector3(x, y, initialPosition.z);
-
-            elapsed += Time.deltaTime;
-
+            transform.position = initialPosition + (Vector3)Random.insideUnitCircle * shakeMagnitude;
+            elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
         transform.position = initialPosition;

@@ -1,53 +1,84 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    public event EventHandler<HealthEventArgs> OnTakeDamage;
-    public event EventHandler<HealthEventArgs> OnDeath;
+    [SerializeField] bool isPlayer;
+    [SerializeField] int health = 50;
+    [SerializeField] int score = 50;
+    [SerializeField] ParticleSystem hitEffect;
 
-    [SerializeField] private bool isPlayer = false;
-    [SerializeField] private int health = 50;
-    [SerializeField] private int scoreValue = 50;
+    [SerializeField] bool applyCameraShake;
+    CameraShake cameraShake;
 
-    private AudioPlayer audioPlayer;
+    AudioPlayer audioPlayer;
+    ScoreKeeper scoreKeeper;
+    LevelManager levelManager;
 
-    private void Awake()
+    void Awake()
     {
+        cameraShake = Camera.main.GetComponent<CameraShake>();
         audioPlayer = FindObjectOfType<AudioPlayer>();
+        scoreKeeper = FindObjectOfType<ScoreKeeper>();
+        levelManager = FindObjectOfType<LevelManager>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
+        DamageDealer damageDealer = other.GetComponent<DamageDealer>();
+
         if (damageDealer != null)
         {
-            TakeDamage(damageDealer, collision.transform.position);
+            TakeDamage(damageDealer.GetDamage());
+            PlayHitEffect();
+            audioPlayer.PlayDamageClip();
+            ShakeCamera();
             damageDealer.Hit();
         }
-    }
-
-    private void TakeDamage(DamageDealer damageDealer, Vector2 damagePosition)
-    {
-        int damage = damageDealer.GetDamage();
-        OnTakeDamage?.Invoke(this, new HealthEventArgs(damagePosition, scoreValue, damage, isPlayer));
-        audioPlayer.PlayExplosionClip(isPlayer);
-
-        health -= damage;
-        if (health <= 0)
-        {
-            Die(damagePosition, damage);
-        }
-    }
-
-    private void Die(Vector2 damagePosition, int damage)
-    {
-        OnDeath?.Invoke(this, new HealthEventArgs(damagePosition, scoreValue, damage, isPlayer));
-        Destroy(gameObject);
     }
 
     public int GetHealth()
     {
         return health;
+    }
+
+    void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        if (!isPlayer)
+        {
+            scoreKeeper.ModifyScore(score);
+        }
+        else
+        {
+            levelManager.LoadGameOver();
+        }
+        Destroy(gameObject);
+    }
+
+    void PlayHitEffect()
+    {
+        if (hitEffect != null)
+        {
+            ParticleSystem instance = Instantiate(hitEffect, transform.position, Quaternion.identity);
+            Destroy(instance.gameObject, instance.main.duration + instance.main.startLifetime.constantMax);
+        }
+    }
+
+    void ShakeCamera()
+    {
+        if (cameraShake != null && applyCameraShake)
+        {
+            cameraShake.Play();
+        }
     }
 }

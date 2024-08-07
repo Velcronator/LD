@@ -99,7 +99,6 @@ GameObject:
   - component: {fileID: 4373204686340379650}
   - component: {fileID: 8692971399692391949}
   - component: {fileID: 1656367446926450437}
-  - component: {fileID: 2492240816287374610}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -220,7 +219,7 @@ MonoBehaviour:
   moveSpeed: 5
   paddingLeft: 0.5
   paddingRight: 0.5
-  paddingTop: 5
+  paddingTop: 8
   paddingBottom: 2
 --- !u!50 &-1199685314413310002
 Rigidbody2D:
@@ -297,7 +296,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 1
-  health: 50
+  health: 100
+  score: 0
+  hitEffect: {fileID: 0}
+  applyCameraShake: 0
 --- !u!114 &1656367446926450437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,23 +313,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 7144596988887838635, guid: 56f0bd25920ef414f925025edfa6ac9c, type: 3}
-  moveSpeed: 10
+  projectileSpeed: 10
   projectileLifetime: 5
-  minFiringRate: 0.8
-  maxFiringRate: 2
   baseFiringRate: 0.2
+  useAI: 0
+  firingRateVariance: 0
+  minimumFiringRate: 0.1
   isFiring: 0
---- !u!114 &2492240816287374610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5719279193060096260}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7e5d301d44c9f469e41ae1ad104cc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  particlePrefabs:
-  - {fileID: 234249168542017684, guid: b77130e86f6cb6d48992271569a064d6, type: 3}

@@ -25,7 +25,8 @@ public class ScoreKeeper : MonoBehaviour
         // Check if Health components are attached
         if (playerHealth != null)
         {
-            playerHealth.OnTakeDamage += PlayerModifyScore;
+            playerHealth.OnTakeDamage += PlayerHit;
+            playerHealth.OnDeath += PlayerDeath;
         }
         else
         {
@@ -45,7 +46,14 @@ public class ScoreKeeper : MonoBehaviour
         // Unsubscribe from health events to prevent memory leaks
         if (playerHealth != null)
         {
-            playerHealth.OnTakeDamage -= PlayerModifyScore;
+            playerHealth.OnTakeDamage -= PlayerDeath;
+            playerHealth.OnDeath -= PlayerDeath;
+        }
+
+        if (enemyHealth != null)
+        {
+            enemyHealth.OnTakeDamage -= EnemyDamageModifyScore;
+            enemyHealth.OnDeath -= EnemyDeathModifyScore;
         }
 
         EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
@@ -69,19 +77,29 @@ public class ScoreKeeper : MonoBehaviour
         }
     }
 
+
+
     private void EnemyDeathModifyScore(object sender, HealthEventArgs e)
     {
-        currentScore += e.ScorePoints;
+        currentScore += e.ScoreValue;
+        Debug.Log("EnemyDeath Score: " + currentScore);
     }
 
     private void EnemyDamageModifyScore(object sender, HealthEventArgs e)
     {
-        currentScore += e.ScorePoints;
+        currentScore += e.ScoreValue;
+        Debug.Log("EnemyDamage Score: " + currentScore);
     }
 
-    private void PlayerModifyScore(object sender, HealthEventArgs e)
+    private void PlayerHit(object sender, HealthEventArgs e)
     {
-        currentScore -= e.ScorePoints;
+        currentScore = Mathf.Clamp(currentScore, 0, int.MaxValue);
+    }
+
+    private void PlayerDeath(object sender, HealthEventArgs e)
+    {
+        currentScore = Mathf.Clamp(currentScore, 0, int.MaxValue);
+        Debug.Log("Player died. Score: " + currentScore);
     }
 
     public int GetScore()

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] float sceneLoadDelay = 2f;
+    //[SerializeField] float sceneLoadDelay = 2f;
     ScoreKeeper scoreKeeper;
 
     void Awake()
@@ -16,17 +16,17 @@ public class LevelManager : MonoBehaviour
     public void LoadGame()
     {
         scoreKeeper.ResetScore();
-        SceneManager.LoadScene("Game");
+        SceneFader.instance.LoadLevel("Game");
     }
 
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneFader.instance.LoadLevel("MainMenu");
     }
 
     public void LoadGameOver()
     {
-        StartCoroutine(WaitAndLoad("GameOver", sceneLoadDelay));
+        SceneFader.instance.LoadLevel("GameOver");
     }
 
     public void QuitGame()

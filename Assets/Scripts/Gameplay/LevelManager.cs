@@ -19,6 +19,11 @@ public class LevelManager : MonoBehaviour
         SceneFader.instance.LoadLevel("Game");
     }
 
+    public void LoadMap()
+    {
+        SceneFader.instance.LoadLevel("Map");
+    }
+
     public void LoadMainMenu()
     {
         SceneFader.instance.LoadLevel("MainMenu");
